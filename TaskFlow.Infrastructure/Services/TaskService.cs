@@ -14,14 +14,17 @@ namespace TaskFlow.Infrastructure.Services
     public class TaskService : ITaskService
     {
         private readonly AppDbContext _db;
-
-        public TaskService(AppDbContext db )
+        private readonly IProjectAccessService _access;
+        public TaskService(AppDbContext db, IProjectAccessService access )
         {
             _db = db;
+            _access = access;
         }
         
         public async Task<TaskResponse> CreateAsync(Guid projectId, CreateTaskRequest request, CancellationToken cancellationToken)
         {
+            await _access.EnsureCanEditTask(projectId, cancellationToken);
+
             var task = request.ToEntity(projectId);
 
             _db.Tasks.Add(task);
@@ -32,6 +35,9 @@ namespace TaskFlow.Infrastructure.Services
 
         public async Task<TaskResponse> UpdateAsync(Guid taskId, UpdateTaskRequest request, CancellationToken cancellationToken)
         {
+            var projectId = await _db.Tasks.Where(t => t.Id == taskId).Select(t => t.ProjectId).FirstAsync(cancellationToken);
+            await _access.EnsureCanEditTask(projectId, cancellationToken);
+
             var affected = await _db.Tasks
            .Where(t => t.Id == taskId)
            .ExecuteUpdateAsync(t => t
@@ -52,6 +58,8 @@ namespace TaskFlow.Infrastructure.Services
 
         public async Task<Guid> DeleteAsync(Guid taskId, CancellationToken cancellationToken)
         {
+            var projectId = await _db.Tasks.Where(t=>t.Id == taskId).Select(t=>t.ProjectId).FirstAsync(cancellationToken);
+            await _access.EnsureCanDeleteTask(projectId, cancellationToken);
             var deleted = await _db.Tasks.Where(t=>t.Id == taskId).ExecuteDeleteAsync(cancellationToken);
 
             if (deleted == 0)

@@ -37,6 +37,7 @@ namespace TaskFlow.Infrastructure.DependencyInjection
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<JwtProvider>();
             services.AddScoped<PasswordHasher>();
+            services.AddScoped<IProjectAccessService, ProjectAccessService>();
             return services;
         }
 
