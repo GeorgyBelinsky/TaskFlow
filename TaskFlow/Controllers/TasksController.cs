@@ -15,7 +15,7 @@ namespace TaskFlow.Api.Controllers
             _taskService = taskService;
         }
 
-        [Authorize]
+        [Authorize(Policy = "ProjectAdmin")]
         [HttpPost("{projectId}/create")]
         public async Task<IActionResult> Create(Guid projectId, CreateTaskRequest request, CancellationToken cancellationToken)
         {
@@ -23,7 +23,7 @@ namespace TaskFlow.Api.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Policy = "ProjectEditor")]
         [HttpPut("{taskId}/edit")]
         public async Task<IActionResult> Update(Guid taskId, UpdateTaskRequest request, CancellationToken cancellationToken)
         {
@@ -31,7 +31,7 @@ namespace TaskFlow.Api.Controllers
             return Ok(result);
         }
 
-        [Authorize]
+        [Authorize(Policy = "ProjectEditor")]
         [HttpDelete("{taskId}/delete")]
         public async Task<IActionResult> Delete(Guid taskId, CancellationToken cancellationToken)
         {

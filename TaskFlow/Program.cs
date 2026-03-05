@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using TaskFlow.Api.Services;
 using TaskFlow.Application.Interfaces;
+using TaskFlow.Domain.Enums;
 using TaskFlow.Infrastructure.DependencyInjection;
+using TaskFlow.Infrastructure.Security;
+using TaskFlow.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,8 +33,22 @@ builder.Services.AddAuthentication("Bearer").AddJwtBearer("Bearer", options =>
 
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IAuthorizationHandler, ProjectRoleHandler>();
 
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("ProjectAdmin", policy =>
+        policy.Requirements.Add(
+            new ProjectRoleRequirement(ProjectRole.Owner, ProjectRole.Admin)));
+
+    options.AddPolicy("ProjectEditor", policy =>
+        policy.Requirements.Add(
+            new ProjectRoleRequirement(ProjectRole.Owner, ProjectRole.Admin, ProjectRole.Member)));
+
+    options.AddPolicy("ProjectViewer", policy =>
+        policy.Requirements.Add(
+            new ProjectRoleRequirement(ProjectRole.Owner, ProjectRole.Admin, ProjectRole.Member, ProjectRole.Viewer)));
+});
 
 builder.Services.AddSwaggerGen(c =>
 {

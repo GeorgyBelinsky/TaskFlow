@@ -32,9 +32,6 @@ namespace TaskFlow.Infrastructure.Services
         public async Task<ProjectResponse> CreateAsync(CreateProjectRequest request, CancellationToken cancellationToken)
         {
 
-            if (!_currentUser.IsAuthenticated)
-                throw new UnauthorizedAccessException();
-
             var project = request.ToEntity();
             
             project.Members.Add(new ProjectMember

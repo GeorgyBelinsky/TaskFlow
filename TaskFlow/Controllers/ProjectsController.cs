@@ -15,6 +15,8 @@ namespace TaskFlow.Api.Controllers
         {
             _projectService = projectService;
         }
+
+
         [Authorize]
         [HttpPost("/create")]
         public async Task<IActionResult> Create(CreateProjectRequest request, CancellationToken cancellationToken)
@@ -23,13 +25,14 @@ namespace TaskFlow.Api.Controllers
             return Ok(result);
         }
 
+        [Authorize(Policy = "ProjectViewer")]
         [HttpGet("{projectId}/stats")]
         public async Task<ActionResult<ProjectStatsResponse>> GetStats(Guid projectId,CancellationToken cancellationToken)
         {
             return Ok(await _projectService.GetStatsAsync(projectId, cancellationToken));
         }
 
-        [Authorize]
+        [Authorize(Policy = "ProjectEditor")]
         [HttpPost("{projectId}/image")]
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> UploadImage(
@@ -60,6 +63,7 @@ namespace TaskFlow.Api.Controllers
             return Ok(await _projectService.GetAllProjectsAsync(cancellationToken));
         }
 
+        [Authorize(Policy = "ProjectViewer")]
         [HttpGet("{projectId}/tasks")]
         public async Task<ActionResult<List<TaskResponse>>> GetProjectTasksAsync (Guid projectId, CancellationToken cancellationToken)
         {
