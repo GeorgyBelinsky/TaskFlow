@@ -1,0 +1,25 @@
+﻿# Build stage
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+COPY ["TaskFlow/TaskFlow.Api.csproj", "TaskFlow/"]
+COPY ["TaskFlow.Application/TaskFlow.Application.csproj", "TaskFlow.Application/"]
+COPY ["TaskFlow.Domain/TaskFlow.Domain.csproj", "TaskFlow.Domain/"]
+COPY ["TaskFlow.Infrastructure/TaskFlow.Infrastructure.csproj", "TaskFlow.Infrastructure/"]
+
+RUN dotnet restore "TaskFlow/TaskFlow.Api.csproj"
+
+COPY . .
+
+WORKDIR "/src/TaskFlow"
+RUN dotnet publish "TaskFlow.Api.csproj" -c Release -o /app/publish
+
+# Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+
+COPY --from=build /app/publish .
+
+EXPOSE 8080
+
+ENTRYPOINT ["dotnet", "TaskFlow.Api.dll"]

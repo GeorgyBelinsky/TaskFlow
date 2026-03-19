@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TaskFlow.Application.Interfaces;
 using RegisterRequest = TaskFlow.Application.DTOs.RegisterRequest;
 using LoginRequest = TaskFlow.Application.DTOs.LoginRequest;

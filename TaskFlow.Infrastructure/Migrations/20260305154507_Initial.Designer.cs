@@ -12,8 +12,8 @@ using TaskFlow.Infrastructure.Data;
 namespace TaskFlow.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260224131146_new")]
-    partial class @new
+    [Migration("20260305154507_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TaskFlow.Domain.Entities;
 using Task = TaskFlow.Domain.Entities.Task;
 
@@ -44,7 +39,7 @@ namespace TaskFlow.Infrastructure.Data
                 .HasOne(pm => pm.Project)
                 .WithMany(p => p.Members)
                 .HasForeignKey(pm => pm.ProjectId);
+            base.OnModelCreating(modelBuilder);
         }
-
     }
 }

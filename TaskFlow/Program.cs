@@ -5,6 +5,7 @@ using TaskFlow.Api.Services;
 using TaskFlow.Application.Interfaces;
 using TaskFlow.Domain.Enums;
 using TaskFlow.Infrastructure.DependencyInjection;
+using TaskFlow.Infrastructure.Extensions;
 using TaskFlow.Infrastructure.Security;
 using TaskFlow.Infrastructure.Services;
 
@@ -81,6 +82,8 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+MigrationExtensions.ApplyMigrations(app.Services);
 
 if (app.Environment.IsDevelopment())
 {

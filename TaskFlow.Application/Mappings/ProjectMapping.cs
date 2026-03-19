@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskFlow.Application.DTOs;
+﻿using TaskFlow.Application.DTOs;
 using TaskFlow.Domain.Entities;
-using Task = TaskFlow.Domain.Entities.Task;
 
 namespace TaskFlow.Application.Mappings
 {
